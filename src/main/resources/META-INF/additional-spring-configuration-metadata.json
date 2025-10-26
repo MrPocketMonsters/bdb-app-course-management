@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "cors.url",
+    "type": "java.lang.String",
+    "description": "URL allowed for CORS requests."
+  },
+  {
+    "name": "jwt.secret.key",
+    "type": "java.lang.String",
+    "description": "Secret key used for signing JWT tokens."
+  }
+]}
