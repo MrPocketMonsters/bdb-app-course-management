@@ -8,6 +8,8 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.Chapter
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ChapterService;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialListElement;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialIdentifierDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
+import org.springframework.http.HttpStatus;
 
 /**
  * Controller for managing chapters.
@@ -114,6 +118,43 @@ public class ChapterController {
         @PathVariable Integer order
     ) {
         chapterService.deleteChapter(courseId, order);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * List materials for a chapter.
+     */
+    @GetMapping("/{order}/materials")
+    public ResponseEntity<List<MaterialListElement>> getMaterialsForChapter(
+        @PathVariable Long courseId,
+        @PathVariable Integer order
+    ) {
+        return ResponseEntity.ok(chapterService.getMaterialsForChapter(courseId, order));
+    }
+
+    /**
+     * Add a new material to a chapter.
+     */
+    @PostMapping("/{order}/materials")
+    public ResponseEntity<Void> addMaterialToChapter(
+        @PathVariable Long courseId,
+        @PathVariable Integer order,
+        @RequestBody MaterialIdentifierDto material
+    ) {
+        chapterService.addMaterialToChapter(courseId, order, material.getMaterialId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * Remove a material from a chapter.
+     */
+    @DeleteMapping("/{order}/materials/{materialId}")
+    public ResponseEntity<Void> removeMaterialFromChapter(
+        @PathVariable Long courseId,
+        @PathVariable Integer order,
+        @PathVariable Long materialId
+    ) {
+        chapterService.removeMaterialFromChapter(courseId, order, materialId);
         return ResponseEntity.ok().build();
     }
 

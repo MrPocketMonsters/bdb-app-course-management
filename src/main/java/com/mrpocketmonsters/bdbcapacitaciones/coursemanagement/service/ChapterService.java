@@ -14,6 +14,9 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Cour
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.ChapterRepository;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.CourseRepository;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.MaterialRepository;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialListElement;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Material;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,9 @@ public class ChapterService {
 
     /** Service for User operations */
     private final UserService userService;
+    
+    /** Repository for Material entities */
+    private final MaterialRepository materialRepository;
 
     /**
      * Retrieves a paginated list of chapters that belong to a course.
@@ -139,6 +145,58 @@ public class ChapterService {
             throw new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order);
 
         chapterRepository.deleteById(id);
+    }
+
+    /**
+     * List materials associated with a chapter.
+     *
+     * @param courseId course id
+     * @param order chapter order
+     * @return list of material DTOs
+     */
+    public java.util.List<MaterialListElement> getMaterialsForChapter(Long courseId, Integer order) {
+        Chapter chapter = chapterRepository.findById_Course_IdAndId_Order(courseId, order)
+            .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
+
+        return chapter.getMaterials().stream()
+            .map(MaterialListElement::of)
+            .toList();
+    }
+
+    /**
+     * Create a new material and associate it to the chapter.
+     *
+     * @param courseId course id
+     * @param order chapter order
+     * @param materialId material identifier
+     */
+    public void addMaterialToChapter(Long courseId, Integer order, Long materialId) {
+        Material material = materialRepository.findById(materialId)
+            .orElseThrow(() -> new EntityNotFoundException("Material not found with id " + materialId));
+
+        Chapter chapter = chapterRepository.findById_Course_IdAndId_Order(courseId, order)
+            .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
+
+        chapter.getMaterials().add(material);
+        chapterRepository.save(chapter);
+    }
+
+    /**
+     * Remove a material association from a chapter.
+     *
+     * @param courseId course id
+     * @param order chapter order
+     * @param materialId material identifier
+     */
+    public void removeMaterialFromChapter(Long courseId, Integer order, Long materialId) {
+        Chapter chapter = chapterRepository.findById_Course_IdAndId_Order(courseId, order)
+            .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
+
+        Material material = materialRepository.findById(materialId)
+            .orElseThrow(() -> new EntityNotFoundException("Material not found with id " + materialId));
+
+        chapter.getMaterials().remove(material);
+        chapterRepository.save(chapter);
     }
 
 }

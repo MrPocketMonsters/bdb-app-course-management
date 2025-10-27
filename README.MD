@@ -44,6 +44,8 @@ Usuario — Consumo y progreso
   - Histórico de capítulos vistos y % de avance por curso
 - GET /api/v1/users/{userId}/courses/{courseId}/recognition
   - Obtener/Generar reconocimiento si curso completado
+- GET /api/v1/materials
+  - Listar todos los materiales (paginado)
 - GET /api/v1/materials/{id}
   - Obtener un material dado.
 - GET /api/v1/courses/{courseId}/chapters/{chapterId}/materials
@@ -73,6 +75,8 @@ Admin — Módulos / Cursos / Capítulos / Material
 - DELETE /api/v1/materials/{id}
 - POST /api/v1/chapters/{chapterId}/materials
   - Añadir material a capítulo
+- DELETE /api/v1/chapters/{chapterId}/materials/{materialId}
+  - Eliminar material de capítulo
 
 ## Modelos JSON (ejemplos)
 

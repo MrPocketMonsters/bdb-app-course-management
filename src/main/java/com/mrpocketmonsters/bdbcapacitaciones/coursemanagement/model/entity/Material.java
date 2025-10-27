@@ -46,7 +46,7 @@ public class Material {
         name = "id_material",
         nullable = false
     )
-    private String id;
+    private Long id;
 
     /** Name of the material */
     @NotEmpty
