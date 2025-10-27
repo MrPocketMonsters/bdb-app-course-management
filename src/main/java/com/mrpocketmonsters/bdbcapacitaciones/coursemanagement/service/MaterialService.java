@@ -4,9 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialDetailsResponse;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialIdentifierDto;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewMaterialRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Material;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.MaterialRepository;
@@ -32,27 +29,25 @@ public class MaterialService {
      * 
      * @param page the page number
      * @param size the page size
-     * @return a page of MaterialListElement DTOs
+     * @return a page of Material entities
      */
-    public Page<MaterialListElement> getAllMaterials(Integer page, Integer size) {
-        return materialRepository.findAll(
-                Pageable
-                    .ofSize(size)
-                    .withPage(page)
-            )
-            .map(MaterialListElement::of);
+    public Page<Material> getAllMaterials(Integer page, Integer size) {
+    return materialRepository.findAll(
+        Pageable
+            .ofSize(size)
+            .withPage(page)
+        );
     }
 
     /** 
      * Retrieves a material by its ID.
      * 
      * @param id the material ID
-     * @return the MaterialDetailsResponse DTO
+     * @return the Material entity
      * @throws EntityNotFoundException if the material is not found
      */
-    public MaterialDetailsResponse getMaterialById(Long id) {
+    public Material getMaterialById(Long id) {
         return materialRepository.findById(id)
-            .map(MaterialDetailsResponse::of)
             .orElseThrow(() -> new EntityNotFoundException("Material not found with id " + id));
     }
 
@@ -60,9 +55,9 @@ public class MaterialService {
      * Creates a new material.
      * 
      * @param req the NewMaterialRequest DTO
-     * @return the MaterialIdentifierDto with the created material's ID
+     * @return the newly created Material
      */
-    public MaterialIdentifierDto createMaterial(NewMaterialRequest req) {
+    public Material createMaterial(NewMaterialRequest req) {
         Material entity = Material.builder()
             .name(req.getName())
             .description(req.getDescription())
@@ -70,11 +65,7 @@ public class MaterialService {
             .url(req.getUrl())
             .build();
 
-        Material saved = materialRepository.save(entity);
-
-        MaterialIdentifierDto resp = new MaterialIdentifierDto();
-        resp.setMaterialId(saved.getId());
-        return resp;
+        return materialRepository.save(entity);
     }
 
     /** 
@@ -82,10 +73,10 @@ public class MaterialService {
      * 
      * @param id the material ID
      * @param req the NewMaterialRequest DTO with updated data
-     * @return the updated MaterialDetailsResponse DTO
+     * @return the updated Material entity
      * @throws EntityNotFoundException if the material is not found
      */
-    public MaterialDetailsResponse updateMaterial(Long id, NewMaterialRequest req) {
+    public Material updateMaterial(Long id, NewMaterialRequest req) {
         Material existing = materialRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Material not found with id " + id));
 
@@ -94,8 +85,7 @@ public class MaterialService {
         existing.setType(req.getType());
         existing.setUrl(req.getUrl());
 
-        Material saved = materialRepository.save(existing);
-        return MaterialDetailsResponse.of(saved);
+        return materialRepository.save(existing);
     }
 
     /** 

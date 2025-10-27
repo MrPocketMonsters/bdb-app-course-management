@@ -45,7 +45,10 @@ public class MaterialController {
      */
     @GetMapping("/")
     public ResponseEntity<Page<MaterialListElement>> getAllMaterials(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(materialService.getAllMaterials(page, size));
+           return ResponseEntity.ok(
+              materialService.getAllMaterials(page, size)
+                 .map(MaterialListElement::of)
+           );
     }
 
     /**
@@ -56,7 +59,7 @@ public class MaterialController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<MaterialDetailsResponse> getMaterialById(@PathVariable Long id) {
-        return ResponseEntity.ok(materialService.getMaterialById(id));
+           return ResponseEntity.ok(MaterialDetailsResponse.of(materialService.getMaterialById(id)));
     }
 
     /**
@@ -67,7 +70,9 @@ public class MaterialController {
      */
     @PostMapping("/")
     public ResponseEntity<MaterialIdentifierDto> newMaterial(@RequestBody NewMaterialRequest material) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(materialService.createMaterial(material));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            MaterialIdentifierDto.of(materialService.createMaterial(material))
+        );
     }
 
     /**
@@ -79,7 +84,7 @@ public class MaterialController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<MaterialDetailsResponse> updateMaterial(@PathVariable Long id, @RequestBody NewMaterialRequest material) {
-        return ResponseEntity.ok(materialService.updateMaterial(id, material));
+           return ResponseEntity.ok(MaterialDetailsResponse.of(materialService.updateMaterial(id, material)));
     }
 
     /**
