@@ -85,9 +85,7 @@ public class Module {
     private User admin;
 
     /** Courses associated with the module */
-    @ManyToMany(
-        fetch = FetchType.LAZY
-    )
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "modulecourse",
         joinColumns = @JoinColumn(name = "module_modulecourse"),

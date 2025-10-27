@@ -1,10 +1,14 @@
 package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
@@ -67,5 +71,23 @@ public class Chapter {
         nullable = false
     )
     private User admin;
+
+    /** Materials associated with the chapter */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "chaptermaterial",
+        joinColumns = {
+            @JoinColumn(
+                name = "course_chaptermaterial",
+                referencedColumnName = "course_chapter"
+            ),
+            @JoinColumn(
+                name = "order_chaptermaterial",
+                referencedColumnName = "order_chapter"
+            )
+        },
+        inverseJoinColumns = @JoinColumn(name = "material_chaptermaterial")
+    )
+    private Set<Material> materials;
 
 }
