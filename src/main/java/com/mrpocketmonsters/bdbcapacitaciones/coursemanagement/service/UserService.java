@@ -1,9 +1,9 @@
 package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class UserService {
      * @return The UserDetails of the found user.
      * @throws UsernameNotFoundException if the user is not found.
      */
-    public UserDetails loadUserByEmail(String email) {
+    public User loadUserByEmail(String email) {
         return userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User " + email + " not found"));
     }
