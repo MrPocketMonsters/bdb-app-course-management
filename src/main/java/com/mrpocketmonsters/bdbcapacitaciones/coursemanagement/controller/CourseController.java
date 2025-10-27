@@ -44,7 +44,10 @@ public class CourseController {
      */
     @GetMapping("/")
     public ResponseEntity<Page<CourseListElement>> getAllCourses(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(courseService.getAllCourses(page, size));
+        return ResponseEntity.ok(
+            courseService.getAllCourses(page, size)
+                .map(CourseListElement::of)
+        );
     }
 
     /**
@@ -55,7 +58,7 @@ public class CourseController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CourseDetailsResponse> getCourseById(@PathVariable Long id) {
-        return ResponseEntity.ok(courseService.getCourseById(id));
+        return ResponseEntity.ok(CourseDetailsResponse.of(courseService.getCourseById(id)));
     }
 
     /**
@@ -67,8 +70,7 @@ public class CourseController {
     @PostMapping("/")
     public ResponseEntity<CourseIdentifierDto> newCourse(@RequestBody NewCourseRequest course) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        CourseIdentifierDto resp = courseService.createCourse(username, course);
-        return ResponseEntity.ok().body(resp);
+        return ResponseEntity.ok(CourseIdentifierDto.of(courseService.createCourse(username, course)));
     }
 
     /**
@@ -80,7 +82,7 @@ public class CourseController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<CourseDetailsResponse> updateCourse(@PathVariable Long id, @RequestBody NewCourseRequest course) {
-        return ResponseEntity.ok(courseService.updateCourse(id, course));
+        return ResponseEntity.ok(CourseDetailsResponse.of(courseService.updateCourse(id, course)));
     }
 
     /**

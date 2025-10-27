@@ -4,10 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseDetailsResponse;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewCourseRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.CourseRepository;
@@ -34,13 +31,12 @@ public class CourseService {
      * @param pageRequest pagination information
      * @return a Page of CourseListElement DTOs
      */
-    public Page<CourseListElement> getAllCourses(Integer page, Integer size) {
-        return courseRepository.findAll(
-                Pageable
-                    .ofSize(size)
-                    .withPage(page)
-            )
-            .map(CourseListElement::of);
+    public Page<Course> getAllCourses(Integer page, Integer size) {
+    return courseRepository.findAll(
+        Pageable
+            .ofSize(size)
+            .withPage(page)
+        );
     }
 
     /**
@@ -50,9 +46,8 @@ public class CourseService {
      * @return the Course entity
      * @throws EntityNotFoundException if not found
      */
-    public CourseDetailsResponse getCourseById(Long id) {
+    public Course getCourseById(Long id) {
         return courseRepository.findById(id)
-            .map(CourseDetailsResponse::of)
             .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + id));
     }
 
@@ -61,9 +56,9 @@ public class CourseService {
      *
      * @param adminEmail the email of the admin creating the course
      * @param course the NewCourseRequest DTO
-     * @return NewCourseResponse with created id
+     * @return Created course entity
      */
-    public CourseIdentifierDto createCourse(String adminEmail, NewCourseRequest course) {
+    public Course createCourse(String adminEmail, NewCourseRequest course) {
         User admin = userService.loadUserByEmail(adminEmail);
 
         Course entity = Course.builder()
@@ -74,11 +69,7 @@ public class CourseService {
             .admin(admin)
             .build();
 
-        Course saved = courseRepository.save(entity);
-
-        CourseIdentifierDto resp = new CourseIdentifierDto();
-        resp.setCourseId(saved.getId());
-        return resp;
+        return courseRepository.save(entity);
     }
 
     /**
@@ -88,7 +79,7 @@ public class CourseService {
      * @param course the NewCourseRequest DTO with updated fields
      * @return NewCourseResponse with updated id
      */
-    public CourseDetailsResponse updateCourse(Long id, NewCourseRequest course) {
+    public Course updateCourse(Long id, NewCourseRequest course) {
         Course existing = courseRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + id));
 
@@ -97,9 +88,7 @@ public class CourseService {
         existing.setDurationInMinutes(course.getDurationInMinutes());
         existing.setExternalUrl(course.getExternalUrl());
 
-        Course saved = courseRepository.save(existing);
-
-        return CourseDetailsResponse.of(saved);
+        return courseRepository.save(existing);
     }
 
     /**
