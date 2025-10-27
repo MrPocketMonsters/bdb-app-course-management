@@ -2,6 +2,7 @@ package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 // import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -43,6 +44,18 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/test/public").permitAll()
                 .requestMatchers("/api/v1/test/user").hasAuthority(Role.USER.name())
                 .requestMatchers("/api/v1/test/admin").hasAuthority(Role.ADMIN.name())
+                // Module endpoints access rules
+                .requestMatchers(HttpMethod.POST, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
+                // Chapter endpoints access rules
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
+                // Course endpoints access rules
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
