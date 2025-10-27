@@ -1,13 +1,12 @@
 package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service;
 
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterDetailsResponse;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Chapter;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.ChapterId;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
@@ -15,7 +14,6 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.ChapterRepository;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.CourseRepository;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.MaterialRepository;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Material;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -51,12 +49,11 @@ public class ChapterService {
      * @param size page size
      * @return a Page of ChapterListElement DTOs
      */
-    public Page<ChapterListElement> getAllChapters(Long courseId, Integer page, Integer size) {
+    public Page<Chapter> getAllChapters(Long courseId, Integer page, Integer size) {
         return chapterRepository.findById_Course_Id(
                 courseId,
                 Pageable.ofSize(size).withPage(page)
-            )
-            .map(ChapterListElement::of);
+            );
     }
 
     /**
@@ -80,7 +77,7 @@ public class ChapterService {
      * @param chapter request DTO
      * @return response DTO with identifiers of created chapter
      */
-    public ChapterIdentifierDto createChapter(String adminEmail, Long courseId, NewChapterRequest chapter) {
+    public Chapter createChapter(String adminEmail, Long courseId, NewChapterRequest chapter) {
         User admin = userService.loadUserByEmail(adminEmail);
         Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + courseId));
@@ -98,12 +95,7 @@ public class ChapterService {
             .admin(admin)
             .build();
 
-        Chapter saved = chapterRepository.save(entity);
-
-        ChapterIdentifierDto resp = new ChapterIdentifierDto();
-        resp.setCourseId(saved.getId().getCourse().getId());
-        resp.setOrder(saved.getId().getOrder());
-        return resp;
+        return chapterRepository.save(entity);
     }
 
     /**
@@ -114,7 +106,7 @@ public class ChapterService {
      * @param chapter request DTO with updated fields
      * @return updated chapter DTO
      */
-    public ChapterDetailsResponse updateChapter(Long courseId, Integer order, NewChapterRequest chapter) {
+    public Chapter updateChapter(Long courseId, Integer order, NewChapterRequest chapter) {
         Chapter existing = chapterRepository.findById_Course_IdAndId_Order(courseId, order)
             .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
 
@@ -122,8 +114,7 @@ public class ChapterService {
         existing.setDescription(chapter.getDescription());
         existing.setContent(chapter.getContent());
 
-        Chapter saved = chapterRepository.save(existing);
-        return ChapterDetailsResponse.of(saved);
+        return chapterRepository.save(existing);
     }
 
     /**
@@ -153,13 +144,11 @@ public class ChapterService {
      * @param order chapter order
      * @return list of material DTOs
      */
-    public java.util.List<MaterialListElement> getMaterialsForChapter(Long courseId, Integer order) {
+    public Set<Material> getMaterialsForChapter(Long courseId, Integer order) {
         Chapter chapter = chapterRepository.findById_Course_IdAndId_Order(courseId, order)
             .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
 
-        return chapter.getMaterials().stream()
-            .map(MaterialListElement::of)
-            .toList();
+        return chapter.getMaterials();
     }
 
     /**

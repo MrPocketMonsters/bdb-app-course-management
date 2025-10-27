@@ -58,7 +58,10 @@ public class ChapterController {
         @RequestParam Integer page,
         @RequestParam Integer size
     ) {
-        return ResponseEntity.ok(chapterService.getAllChapters(courseId, page, size));
+        return ResponseEntity.ok(
+            chapterService.getAllChapters(courseId, page, size)
+                .map(ChapterListElement::of)
+        );
     }
 
     /**
@@ -93,7 +96,11 @@ public class ChapterController {
         @RequestBody NewChapterRequest chapter
     ) {
         String adminEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(chapterService.createChapter(adminEmail, courseId, chapter));
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+            ChapterIdentifierDto.of(
+                chapterService.createChapter(adminEmail, courseId, chapter)
+            )
+        );
     }
 
     /**
@@ -110,7 +117,11 @@ public class ChapterController {
         @PathVariable Integer order,
         @RequestBody NewChapterRequest chapter
     ) {
-        return ResponseEntity.ok(chapterService.updateChapter(courseId, order, chapter));
+        return ResponseEntity.ok(
+            ChapterDetailsResponse.of(
+                chapterService.updateChapter(courseId, order, chapter)
+            )
+        );
     }
 
     /**
@@ -137,7 +148,12 @@ public class ChapterController {
         @PathVariable Long courseId,
         @PathVariable Integer order
     ) {
-        return ResponseEntity.ok(chapterService.getMaterialsForChapter(courseId, order));
+        return ResponseEntity.ok(
+            chapterService.getMaterialsForChapter(courseId, order)
+                .stream()
+                .map(MaterialListElement::of)
+                .toList()
+        );
     }
 
     /**
