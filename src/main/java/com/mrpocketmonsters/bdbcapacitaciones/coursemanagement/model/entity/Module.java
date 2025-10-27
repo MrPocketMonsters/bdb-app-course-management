@@ -37,7 +37,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(
     name = "module",
-    uniqueConstraints = @UniqueConstraint(columnNames = "name")
+    uniqueConstraints = @UniqueConstraint(columnNames = "name_module")
 )
 public class Module {
 
