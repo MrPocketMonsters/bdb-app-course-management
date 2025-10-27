@@ -1,6 +1,6 @@
 package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -93,6 +93,6 @@ public class Module {
         joinColumns = @JoinColumn(name = "module_modulecourse"),
         inverseJoinColumns = @JoinColumn(name = "course_modulecourse")
     )
-    private List<Course> courses;
+    private Set<Course> courses;
     
 }

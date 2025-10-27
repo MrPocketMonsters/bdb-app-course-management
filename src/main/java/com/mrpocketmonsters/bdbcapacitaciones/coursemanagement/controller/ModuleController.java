@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
@@ -13,6 +14,7 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ModuleSer
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -93,6 +95,32 @@ public class ModuleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteModule(@PathVariable Long id) {
         moduleService.deleteModule(id);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Assign courses to a module.
+     * 
+     * @param id the ID of the module
+     * @param courseIdentifier the course identifier DTO
+     * @return a ResponseEntity indicating the result of the operation
+     */
+    @PostMapping("/{id}/courses")
+    public ResponseEntity<Void> assignCoursesToModule(@PathVariable Long id, @RequestBody CourseIdentifierDto courseIdentifier) {
+        moduleService.assignCoursesToModule(id, courseIdentifier.getCourseId());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    /**
+     * Remove a course from a module.
+     * 
+     * @param id the ID of the module
+     * @param courseId the ID of the course to remove
+     * @return a ResponseEntity indicating the result of the operation
+     */
+    @DeleteMapping("/{id}/courses/{courseId}")
+    public ResponseEntity<Void> removeCourseFromModule(@PathVariable Long id, @PathVariable Long courseId) {
+        moduleService.removeCourseFromModule(id, courseId);
         return ResponseEntity.ok().build();
     }
 

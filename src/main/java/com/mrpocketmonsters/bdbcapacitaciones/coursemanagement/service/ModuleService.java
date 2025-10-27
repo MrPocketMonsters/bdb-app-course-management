@@ -8,8 +8,10 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleD
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleIdentifierDto;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Module;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.CourseRepository;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.ModuleRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +31,8 @@ public class ModuleService {
     private final ModuleRepository moduleRepository;
     /** Service for User operations */
     private final UserService userService;
+    /** Repository for Course entities */
+    private final CourseRepository courseRepository;
 
     /**
      * Retrieves a paginated list of all modules.
@@ -115,6 +119,40 @@ public class ModuleService {
             throw new EntityNotFoundException("Module not found with id " + id);
 
         moduleRepository.deleteById(id);
+    }
+
+    /**
+     * Assign courses to a module.
+     * 
+     * @param id the ID of the module
+     * @param courseId the course identifier DTO
+     */
+    public void assignCoursesToModule(Long id, Long courseId) {
+        Module module = moduleRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Module not found with id " + id));
+
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + courseId));
+
+        module.getCourses().add(course);
+        moduleRepository.save(module);
+    }
+
+    /**
+     * Remove a course from a module.
+     * 
+     * @param id the ID of the module
+     * @param courseId the ID of the course to remove
+     */
+    public void removeCourseFromModule(Long id, Long courseId) {
+        Module module = moduleRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Module not found with id " + id));
+        
+        Course course = courseRepository.findById(courseId)
+            .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + courseId));
+
+        module.getCourses().remove(course);
+        moduleRepository.save(module);
     }
     
 }
