@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Nicolás Sabogal
  */
 @Data
-public class NewChapterResponse {
+public class ChapterIdentifierDto {
 
     /** Course id where the chapter was created */
     private Long courseId;

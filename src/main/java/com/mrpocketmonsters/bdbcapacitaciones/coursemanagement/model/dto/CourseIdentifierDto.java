@@ -8,7 +8,7 @@ import lombok.Data;
  * @author Nicolás Sabogal
  */
 @Data
-public class NewCourseResponse {
+public class CourseIdentifierDto {
 
     /** Unique identifier of the created course */
     private Long courseId;

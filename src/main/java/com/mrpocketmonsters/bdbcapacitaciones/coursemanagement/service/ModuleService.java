@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Module;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.ModuleRepository;
@@ -68,7 +68,7 @@ public class ModuleService {
      * @param module the NewModuleRequest DTO containing module details
      * @return a NewModuleResponse DTO containing the ID of the newly created module
      */
-    public NewModuleResponse createModule(String adminEmail, NewModuleRequest module) {
+    public ModuleIdentifierDto createModule(String adminEmail, NewModuleRequest module) {
         User admin = userService.loadUserByEmail(adminEmail);
         Module entity = Module.builder()
             .name(module.getName())
@@ -78,7 +78,7 @@ public class ModuleService {
         
         Module saved = moduleRepository.save(entity);
 
-        NewModuleResponse resp = new NewModuleResponse();
+        ModuleIdentifierDto resp = new ModuleIdentifierDto();
         resp.setModuleId(saved.getId());
         return resp;
     }

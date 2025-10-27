@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ModuleService;
 
 import lombok.RequiredArgsConstructor;
@@ -67,7 +67,7 @@ public class ModuleController {
      * @return a ResponseEntity containing the created module information or an error response
      */
     @PostMapping("/")
-    public ResponseEntity<NewModuleResponse> newModule(@RequestBody NewModuleRequest module) {
+    public ResponseEntity<ModuleIdentifierDto> newModule(@RequestBody NewModuleRequest module) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok(moduleService.createModule(username, module));
     }

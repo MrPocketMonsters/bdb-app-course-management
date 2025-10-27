@@ -9,7 +9,7 @@ import lombok.Data;
  * @author Nicolás Sabogal
  */
 @Data   
-public class NewModuleResponse {
+public class ModuleIdentifierDto {
 
     /** Unique identifier of the newly created module */
     private Long moduleId;

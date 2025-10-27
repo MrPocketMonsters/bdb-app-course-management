@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Chapter;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.ChapterId;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
@@ -75,7 +75,7 @@ public class ChapterService {
      * @param chapter request DTO
      * @return response DTO with identifiers of created chapter
      */
-    public NewChapterResponse createChapter(String adminEmail, Long courseId, NewChapterRequest chapter) {
+    public ChapterIdentifierDto createChapter(String adminEmail, Long courseId, NewChapterRequest chapter) {
         User admin = userService.loadUserByEmail(adminEmail);
         Course course = courseRepository.findById(courseId)
             .orElseThrow(() -> new EntityNotFoundException("Course not found with id " + courseId));
@@ -95,7 +95,7 @@ public class ChapterService {
 
         Chapter saved = chapterRepository.save(entity);
 
-        NewChapterResponse resp = new NewChapterResponse();
+        ChapterIdentifierDto resp = new ChapterIdentifierDto();
         resp.setCourseId(saved.getId().getCourse().getId());
         resp.setOrder(saved.getId().getOrder());
         return resp;

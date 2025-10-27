@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewCourseRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewCourseResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.CourseService;
@@ -65,9 +65,9 @@ public class CourseController {
      * @return a ResponseEntity containing the created course information or an error response
      */
     @PostMapping("/")
-    public ResponseEntity<NewCourseResponse> newCourse(@RequestBody NewCourseRequest course) {
+    public ResponseEntity<CourseIdentifierDto> newCourse(@RequestBody NewCourseRequest course) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        NewCourseResponse resp = courseService.createCourse(username, course);
+        CourseIdentifierDto resp = courseService.createCourse(username, course);
         return ResponseEntity.ok().body(resp);
     }
 

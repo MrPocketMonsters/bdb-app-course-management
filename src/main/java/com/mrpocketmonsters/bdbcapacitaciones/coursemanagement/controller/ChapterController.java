@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ChapterService;
 
 import lombok.RequiredArgsConstructor;
@@ -76,7 +76,7 @@ public class ChapterController {
      * @return created chapter identifiers
      */
     @PostMapping("/")
-    public ResponseEntity<NewChapterResponse> newChapter(
+    public ResponseEntity<ChapterIdentifierDto> newChapter(
         @PathVariable Long courseId,
         @RequestBody NewChapterRequest chapter
     ) {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewCourseRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewCourseResponse;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.repository.CourseRepository;
@@ -63,7 +63,7 @@ public class CourseService {
      * @param course the NewCourseRequest DTO
      * @return NewCourseResponse with created id
      */
-    public NewCourseResponse createCourse(String adminEmail, NewCourseRequest course) {
+    public CourseIdentifierDto createCourse(String adminEmail, NewCourseRequest course) {
         User admin = userService.loadUserByEmail(adminEmail);
 
         Course entity = Course.builder()
@@ -76,7 +76,7 @@ public class CourseService {
 
         Course saved = courseRepository.save(entity);
 
-        NewCourseResponse resp = new NewCourseResponse();
+        CourseIdentifierDto resp = new CourseIdentifierDto();
         resp.setCourseId(saved.getId());
         return resp;
     }
