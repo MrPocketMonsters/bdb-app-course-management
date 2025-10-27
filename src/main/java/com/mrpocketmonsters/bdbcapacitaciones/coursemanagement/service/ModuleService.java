@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleResponse;
@@ -49,11 +50,12 @@ public class ModuleService {
      * Retrieves a module by its unique identifier.
      * 
      * @param id the unique identifier of the module
-     * @return the Module entity
+     * @return a ModuleDetailsResponse DTO containing module details
      * @throws EntityNotFoundException if the module is not found
      */
-    public Module getModuleById(Long id) {
+    public ModuleDetailsResponse getModuleById(Long id) {
         return moduleRepository.findById(id)
+            .map(ModuleDetailsResponse::of)
             .orElseThrow(
                 () -> new EntityNotFoundException("Module not found with id " + id)
             );
@@ -86,10 +88,10 @@ public class ModuleService {
      * 
      * @param id the unique identifier of the module to update
      * @param module the NewModuleRequest DTO containing updated module details
-     * @return the updated Module entity
+     * @return the updated ModuleDetailsResponse DTO
      * @throws EntityNotFoundException if the module is not found
      */
-    public Module updateModule(Long id, NewModuleRequest module) {
+    public ModuleDetailsResponse updateModule(Long id, NewModuleRequest module) {
         Module existing = moduleRepository.findById(id)
             .orElseThrow(
                 () -> new EntityNotFoundException("Module not found with id " + id)
@@ -99,7 +101,7 @@ public class ModuleService {
         existing.setDescription(module.getDescription());
         Module saved = moduleRepository.save(existing);
 
-        return saved;
+        return ModuleDetailsResponse.of(saved);
     }
 
     /**

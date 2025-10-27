@@ -4,11 +4,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ModuleService;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Module;
 
 import lombok.RequiredArgsConstructor;
 
@@ -56,7 +56,7 @@ public class ModuleController {
      * @return a ResponseEntity containing the module information or an error response
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Module> getModuleById(@PathVariable Long id) {
+    public ResponseEntity<ModuleDetailsResponse> getModuleById(@PathVariable Long id) {
         return ResponseEntity.ok(moduleService.getModuleById(id));
     }
 
@@ -80,7 +80,7 @@ public class ModuleController {
      * @return a ResponseEntity indicating the result of the operation
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Module> updateModule(@PathVariable Long id, @RequestBody NewModuleRequest module) {
+    public ResponseEntity<ModuleDetailsResponse> updateModule(@PathVariable Long id, @RequestBody NewModuleRequest module) {
         return ResponseEntity.ok(moduleService.updateModule(id, module));
     }
 
