@@ -4,10 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
-import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Module;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.User;
@@ -39,30 +36,26 @@ public class ModuleService {
      * 
      * @param page the page number to retrieve
      * @param size the number of modules per page
-     * @return a Page of ModuleListElement DTOs
+     * @return a Page of Modules
      */
-    public Page<ModuleListElement> getAllModules(Integer page, Integer size) {
-        return moduleRepository.findAll(
-                Pageable
-                    .ofSize(size)
-                    .withPage(page)
-            )
-            .map(ModuleListElement::of);
+    public Page<Module> getAllModules(Integer page, Integer size) {
+    return moduleRepository.findAll(
+        Pageable
+            .ofSize(size)
+            .withPage(page)
+        );
     }
 
     /**
      * Retrieves a module by its unique identifier.
      * 
      * @param id the unique identifier of the module
-     * @return a ModuleDetailsResponse DTO containing module details
+     * @return the module entity
      * @throws EntityNotFoundException if the module is not found
      */
-    public ModuleDetailsResponse getModuleById(Long id) {
+    public Module getModuleById(Long id) {
         return moduleRepository.findById(id)
-            .map(ModuleDetailsResponse::of)
-            .orElseThrow(
-                () -> new EntityNotFoundException("Module not found with id " + id)
-            );
+            .orElseThrow(() -> new EntityNotFoundException("Module not found with id " + id));
     }
 
     /**
@@ -70,9 +63,9 @@ public class ModuleService {
      * 
      * @param adminEmail the email of the admin user creating the module
      * @param module the NewModuleRequest DTO containing module details
-     * @return a NewModuleResponse DTO containing the ID of the newly created module
+     * @return the newly created module
      */
-    public ModuleIdentifierDto createModule(String adminEmail, NewModuleRequest module) {
+    public Module createModule(String adminEmail, NewModuleRequest module) {
         User admin = userService.loadUserByEmail(adminEmail);
         Module entity = Module.builder()
             .name(module.getName())
@@ -80,11 +73,7 @@ public class ModuleService {
             .admin(admin)
             .build();
         
-        Module saved = moduleRepository.save(entity);
-
-        ModuleIdentifierDto resp = new ModuleIdentifierDto();
-        resp.setModuleId(saved.getId());
-        return resp;
+        return moduleRepository.save(entity);
     }
 
     /**
@@ -92,20 +81,16 @@ public class ModuleService {
      * 
      * @param id the unique identifier of the module to update
      * @param module the NewModuleRequest DTO containing updated module details
-     * @return the updated ModuleDetailsResponse DTO
+     * @return the updated Module entity
      * @throws EntityNotFoundException if the module is not found
      */
-    public ModuleDetailsResponse updateModule(Long id, NewModuleRequest module) {
+    public Module updateModule(Long id, NewModuleRequest module) {
         Module existing = moduleRepository.findById(id)
-            .orElseThrow(
-                () -> new EntityNotFoundException("Module not found with id " + id)
-            );
+            .orElseThrow(() -> new EntityNotFoundException("Module not found with id " + id));
 
         existing.setName(module.getName());
         existing.setDescription(module.getDescription());
-        Module saved = moduleRepository.save(existing);
-
-        return ModuleDetailsResponse.of(saved);
+        return moduleRepository.save(existing);
     }
 
     /**

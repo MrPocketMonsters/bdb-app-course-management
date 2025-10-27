@@ -48,7 +48,10 @@ public class ModuleController {
      */
     @GetMapping("/")
     public ResponseEntity<Page<ModuleListElement>> getAllModules(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(moduleService.getAllModules(page, size));
+        return ResponseEntity.ok(
+            moduleService.getAllModules(page, size)
+                .map(ModuleListElement::of)
+        );
     }
 
     /**
@@ -59,7 +62,7 @@ public class ModuleController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ModuleDetailsResponse> getModuleById(@PathVariable Long id) {
-        return ResponseEntity.ok(moduleService.getModuleById(id));
+        return ResponseEntity.ok(ModuleDetailsResponse.of(moduleService.getModuleById(id)));
     }
 
     /**
@@ -71,7 +74,11 @@ public class ModuleController {
     @PostMapping("/")
     public ResponseEntity<ModuleIdentifierDto> newModule(@RequestBody NewModuleRequest module) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(moduleService.createModule(username, module));
+        return ResponseEntity.ok(
+            ModuleIdentifierDto.of(
+                moduleService.createModule(username, module)
+            )
+        );
     }
 
     /**
@@ -83,7 +90,7 @@ public class ModuleController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<ModuleDetailsResponse> updateModule(@PathVariable Long id, @RequestBody NewModuleRequest module) {
-        return ResponseEntity.ok(moduleService.updateModule(id, module));
+        return ResponseEntity.ok(ModuleDetailsResponse.of(moduleService.updateModule(id, module)));
     }
 
     /**
