@@ -8,6 +8,7 @@ import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.Chapter
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewChapterRequest;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ChapterIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ChapterService;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.UserHistoryService;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.MaterialIdentifierDto;
 
@@ -40,6 +41,9 @@ public class ChapterController {
     /** Service for chapter operations */
     private final ChapterService chapterService;
 
+    /** Service for user history operations */
+    private final UserHistoryService userHistoryService;
+
     /**
      * Get all chapters for a given course.
      *
@@ -69,7 +73,11 @@ public class ChapterController {
         @PathVariable Long courseId,
         @PathVariable Integer order
     ) {
-        return ResponseEntity.ok(chapterService.getChapterById(courseId, order));
+        return ResponseEntity.ok(
+            ChapterDetailsResponse.of(
+                chapterService.getChapterById(courseId, order)
+            )
+        );
     }
 
     /**
@@ -155,6 +163,23 @@ public class ChapterController {
         @PathVariable Long materialId
     ) {
         chapterService.removeMaterialFromChapter(courseId, order, materialId);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Mark a chapter as seen by the current user.
+     *
+     * @param courseId id of the course
+     * @param order order of the chapter
+     * @return empty response
+     */
+    @PostMapping("/{order}/mark-seen")
+    public ResponseEntity<Void> markSeen(
+        @PathVariable Long courseId,
+        @PathVariable Integer order
+    ) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        userHistoryService.markChapterAsSeen(userEmail, courseId, order);
         return ResponseEntity.ok().build();
     }
 

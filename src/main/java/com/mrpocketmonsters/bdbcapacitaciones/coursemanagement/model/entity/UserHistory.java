@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +32,12 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "userhistory")
+@Table(
+    name = "userhistory",
+    uniqueConstraints = @UniqueConstraint(
+        columnNames = { "user_userhistory", "course_userhistory", "order_userhistory" }
+    )
+)
 public class UserHistory {
 
     /** Unique identifier for the history record */

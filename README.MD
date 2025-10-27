@@ -40,9 +40,11 @@ Usuario — Consumo y progreso
   - Obtener curso con índice de capítulos y materiales
 - POST /api/v1/courses/{courseId}/chapters/{chapterId}/mark-seen
   - Marcar capítulo como visto (registra UserHistory)
-- GET /api/v1/users/{userId}/progress
+- GET /api/v1/userhistories/{userId}/chapters
   - Histórico de capítulos vistos y % de avance por curso
-- GET /api/v1/users/{userId}/courses/{courseId}/recognition
+- GET /api/v1/userhistories/{userId}/courses
+  - Obtener/Generar reconocimiento de los cursos completados
+- GET /api/v1/userhistories/{userId}/courses/{courseId}
   - Obtener/Generar reconocimiento si curso completado
 - GET /api/v1/materials
   - Listar todos los materiales (paginado)
@@ -232,13 +234,13 @@ curl -X POST http://localhost:8080/api/courses/{courseId}/chapters/{chapterId}/m
 
 Obtener histórico:
 ```bash
-curl -X GET http://localhost:8080/api/users/{userId}/progress \
+curl -X GET http://localhost:8080/api/userhistories/{userId}/chapters \
   -H "Authorization: Bearer <TOKEN_USER>"
 ```
 
 Generar o obtener reconocimiento:
 ```bash
-curl -X GET http://localhost:8080/api/users/{userId}/courses/{courseId}/recognition \
+curl -X GET http://localhost:8080/api/userhistories/{userId}/courses/{courseId}/recognition \
   -H "Authorization: Bearer <TOKEN_USER>"
 ```
 

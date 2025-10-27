@@ -67,9 +67,8 @@ public class ChapterService {
      * @return a ChapterDetailsResponse DTO
      * @throws EntityNotFoundException if not found
      */
-    public ChapterDetailsResponse getChapterById(Long courseId, Integer order) {
+    public Chapter getChapterById(Long courseId, Integer order) {
         return chapterRepository.findById_Course_IdAndId_Order(courseId, order)
-            .map(ChapterDetailsResponse::of)
             .orElseThrow(() -> new EntityNotFoundException("Chapter not found for course " + courseId + " and order " + order));
     }
 
