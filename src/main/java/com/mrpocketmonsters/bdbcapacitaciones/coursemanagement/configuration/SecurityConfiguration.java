@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
                 // Chapter endpoints access rules
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**/chapters/**/mark-seen").hasAuthority(Role.USER.name())
                 .requestMatchers(HttpMethod.POST, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
@@ -56,6 +57,10 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
+                // Material endpoints access rules
+                .requestMatchers(HttpMethod.POST, "/api/v1/materials/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/materials/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/materials/**").hasAuthority(Role.ADMIN.name())
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
