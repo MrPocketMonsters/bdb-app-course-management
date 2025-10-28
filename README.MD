@@ -141,18 +141,13 @@ Solicitud:
   "name": "Vídeo de Ejemplo",
   "description": null,
   "type": "video",
-  "filename": "owasp-intro.mp4",
-  "data": "...Binary Data String..."
+  "url": "some-server.example/some-bucket/owasp-intro.mp4"
 }
 ```
 Respuesta:
 ```json
 {
-  "id": 18,
-  "name": "Vídeo de Ejemplo",
-  "description": null,
-  "type": "video",
-  "url": "some-server.example/some-bucket/owasp-intro.mp4",
+  "materialId": 18,
 }
 ```
 
