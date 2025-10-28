@@ -25,6 +25,12 @@ public class RecognitionDetailsResponse {
     /** The time when the recognition was created. */
     private Instant createdAt;
 
+    /** 
+     * Converts a Recognition entity to a RecognitionDetailsResponse DTO.
+     *
+     * @param recognition the Recognition entity
+     * @return the corresponding RecognitionDetailsResponse DTO
+     */
     public static RecognitionDetailsResponse of(Recognition recognition) {
         RecognitionDetailsResponse dto = new RecognitionDetailsResponse();
         dto.setId(recognition.getId());

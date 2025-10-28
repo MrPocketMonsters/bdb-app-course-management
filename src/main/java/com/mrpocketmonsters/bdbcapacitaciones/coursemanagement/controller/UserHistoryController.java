@@ -47,6 +47,12 @@ public class UserHistoryController {
         );
     }
 
+    /**
+     * Get all recognitions for a user.
+     *
+     * @param userId user identifier
+     * @return collection of recognitions earned by the user
+     */
     @GetMapping("/courses")
     public ResponseEntity<List<RecognitionListElement>> getAllUserRecognitions(@PathVariable Long userId) {
         return ResponseEntity.ok(
@@ -57,6 +63,13 @@ public class UserHistoryController {
         );
     }
 
+    /**
+     * Get recognition details for a user in a specific course.
+     *
+     * @param userId   user identifier
+     * @param courseId course identifier
+     * @return recognition details for the specified course
+     */
     @GetMapping("/courses/{courseId}")
     public ResponseEntity<RecognitionDetailsResponse> getUserRecognitionForCourse(
         @PathVariable Long userId,
