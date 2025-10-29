@@ -85,10 +85,16 @@ public class UserHistoryService {
         // First get current recognitions and courses in user histories.
         List<Recognition> recognitions = recognitionRepository.findByUser_Id(userId);
 
+        List<Long> recognizedCourseIds = recognitions
+            .stream()
+            .map(recognition -> recognition.getCourse().getId())
+            .toList();
+
         List<Course> coursesInUserHistories = userHistoryRepository
             .findByUser_Id(userId)
             .stream()
             .map(uh -> uh.getChapter().getId().getCourse())
+            .filter(course -> !recognizedCourseIds.contains(course.getId()))
             .distinct()
             .toList();
 
