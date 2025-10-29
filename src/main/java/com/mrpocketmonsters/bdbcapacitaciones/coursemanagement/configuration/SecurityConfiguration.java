@@ -49,12 +49,12 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/modules/**").hasAuthority(Role.ADMIN.name())
-                // Chapter endpoints access rules
-                .requestMatchers(HttpMethod.GET, "/api/v1/courses/**/chapters/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**/chapters/**/mark-seen").hasAuthority(Role.USER.name())
-                .requestMatchers(HttpMethod.POST, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/**/chapters/**").hasAuthority(Role.ADMIN.name())
+                // Chapter endpoints access rules - specific patterns first
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/*/chapters/*/mark-seen").hasAuthority(Role.USER.name())
+                .requestMatchers(HttpMethod.GET, "/api/v1/courses/*/chapters/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/courses/*/chapters/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.PUT, "/api/v1/courses/*/chapters/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.DELETE, "/api/v1/courses/*/chapters/**").hasAuthority(Role.ADMIN.name())
                 // Course endpoints access rules
                 .requestMatchers(HttpMethod.GET, "/api/v1/courses/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/courses/**").hasAuthority(Role.ADMIN.name())
