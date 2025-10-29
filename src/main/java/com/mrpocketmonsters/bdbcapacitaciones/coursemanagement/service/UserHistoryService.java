@@ -66,6 +66,9 @@ public class UserHistoryService {
      * @return collection of chapters seen by the user
      */
     public Collection<UserHistory> getUserChapterHistory(Long userId) {
+        if (!userRepository.existsById(userId))
+            throw new EntityNotFoundException("User not found with id " + userId);
+
         return userHistoryRepository.findByUser_Id(userId);
     }
 
@@ -76,6 +79,9 @@ public class UserHistoryService {
      * @return list of Recognition entities
      */
     public List<Recognition> getAllUserRecognitions(Long userId) {
+        if (!userRepository.existsById(userId))
+            throw new EntityNotFoundException("User not found with id " + userId);
+
         // First get current recognitions and courses in user histories.
         List<Recognition> recognitions = recognitionRepository.findByUser_Id(userId);
 
@@ -111,6 +117,9 @@ public class UserHistoryService {
      * @return the Recognition entity
      */
     public Recognition getUserRecognitionForCourse(Long userId, Long courseId) {
+        if (!userRepository.existsById(userId))
+            throw new EntityNotFoundException("User not found with id " + userId);
+
         return recognitionRepository.findByUser_IdAndCourse_Id(userId, courseId)
             .orElseGet(() -> generateNewRecognition(userId, courseId));
     }
