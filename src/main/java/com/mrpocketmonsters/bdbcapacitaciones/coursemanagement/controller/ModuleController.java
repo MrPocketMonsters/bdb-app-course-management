@@ -5,13 +5,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseIdentifierDto;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.CourseListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleDetailsResponse;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleListElement;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.NewModuleRequest;
+import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.entity.Course;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.model.dto.ModuleIdentifierDto;
 import com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service.ModuleService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -103,6 +108,16 @@ public class ModuleController {
     public ResponseEntity<Void> deleteModule(@PathVariable Long id) {
         moduleService.deleteModule(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}/courses")
+    public ResponseEntity<Set<CourseListElement>> getCoursesByModuleId(@PathVariable Long id) {
+        Set<Course> courses = moduleService.getCoursesByModuleId(id);
+        return ResponseEntity.ok(
+            courses.stream()
+                .map(CourseListElement::of)
+                .collect(Collectors.toSet())
+        );
     }
 
     /**

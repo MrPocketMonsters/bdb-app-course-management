@@ -1,5 +1,7 @@
 package com.mrpocketmonsters.bdbcapacitaciones.coursemanagement.service;
 
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -138,6 +140,13 @@ public class ModuleService {
 
         module.getCourses().remove(course);
         moduleRepository.save(module);
+    }
+
+    public Set<Course> getCoursesByModuleId(Long id) {
+        Module module = moduleRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Module not found with id " + id));
+
+        return module.getCourses();
     }
     
 }
