@@ -71,18 +71,13 @@ public class DemoDataConfiguration {
                 return;
             }
 
-            System.out.println("🗑️  Dropping all existing data...");
+            if (moduleRepository.count() > 0 || courseRepository.count() > 0) {
+                System.out.println("Database already contains data. Skipping demo data initialization.");
+                initialized = true;
+                return;
+            }
             
-            // Delete all data in the correct order (respecting foreign key constraints)
-            recognitionRepository.deleteAll();
-            userHistoryRepository.deleteAll();
-            moduleRepository.deleteAll();
-            chapterRepository.deleteAll();
-            courseRepository.deleteAll();
-            materialRepository.deleteAll();
-            
-            System.out.println("✅ All data dropped successfully.");
-            System.out.println("🚀 Initializing demo data...");
+            System.out.println("Initializing demo data...");
 
             // Assume user with ID 1 exists
             User admin = userRepository.findById(1L)
